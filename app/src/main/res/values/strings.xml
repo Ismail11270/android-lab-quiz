@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Quizz</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="quiz_results">Quiz Results</string>
+    <string name="exit">Exit</string>
+    <string name="play_nagain">Play\n Again</string>
+    <string name="next">Next</string>
+    <string name="prev">Prev</string>
+    <string name="quiz_title">The Best Quiz</string>
+    <string name="checkmark_descr">Checkmark, checked or unchecked</string>
+    <string name="restart_button">Restart</string>
+    <string name="submit_button">Submit Answers</string>
+</resources>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/radioGroup"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:context=".fragment.SingleChoiceQuestionFragment">
+
+    <RadioButton
+        android:id="@+id/optionOne"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:tag="0"
+        android:text="Answer option one" />
+
+    <RadioButton
+        android:id="@+id/optionTwo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:tag="1"
+        android:text="Answer option two" />
+
+    <RadioButton
+        android:id="@+id/optionThree"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:tag="2"
+        android:text="Answer option two" />
+
+    <RadioButton
+        android:id="@+id/optionFour"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:tag="3"
+        android:text="Answer option four" />
+</RadioGroup>
