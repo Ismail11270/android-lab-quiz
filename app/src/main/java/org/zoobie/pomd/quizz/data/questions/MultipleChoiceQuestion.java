@@ -5,30 +5,25 @@ import android.os.Parcelable;
 
 import java.util.Arrays;
 
+
 public class MultipleChoiceQuestion extends Question {
 
-    private int[] correctOptions;
+    private boolean[] correctOptions = new boolean[4];
 
     private boolean[] selectedOptions = {false, false, false, false};
 
     public String[] optionsText = new String[4];
 
-    public MultipleChoiceQuestion(String questionBody, String[] options, int... correctOptions) {
+    public MultipleChoiceQuestion(String questionBody, String[] options, boolean[] correctOptions) {
         super(questionBody,Type.MULTIPLE_OPTION);
         optionsText = options;
         this.correctOptions = correctOptions;
     }
 
     public MultipleChoiceQuestion(Parcel parcel){
-//        int i = parcel.readInt();
-//        System.out.println(i+" ");
-//        type = Type.getTypeById(i);
         type = Type.MULTIPLE_OPTION;
         questionBody = parcel.readString();
-        System.out.println(questionBody);
-        int a = parcel.readInt();
-        correctOptions = new int[a];
-        parcel.readIntArray(correctOptions);
+        parcel.readBooleanArray(correctOptions);
         parcel.readBooleanArray(selectedOptions);
         parcel.readStringArray(optionsText);
     }
@@ -38,7 +33,7 @@ public class MultipleChoiceQuestion extends Question {
     public boolean[] getSelectedOptions(){
         return selectedOptions;
     }
-    public int[] getCorrectOptions(){
+    public boolean[] getCorrectOptions(){
         return correctOptions;
     }
     public void setSelectedOption(int i, boolean selected){
@@ -55,25 +50,14 @@ public class MultipleChoiceQuestion extends Question {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(type.id);
         dest.writeString(questionBody);
-        dest.writeInt(correctOptions.length);
-        dest.writeIntArray(correctOptions);
+        dest.writeBooleanArray(correctOptions);
         dest.writeBooleanArray(selectedOptions);
         dest.writeStringArray(optionsText);
     }
 
+    //{true,true,true,true}
+    //0,1,2,3 correct
     public boolean isAnsweredCorrectly(){
-        int j = correctOptions.length;
-        for(int i = 0; i < 4; i++){
-            if(selectedOptions[i]) {
-                for(int a : correctOptions){
-                    if(a == i) {
-                        j--;
-                        continue;
-                    }
-                }
-                break;
-            }
-        }
-        return j==1;
+        return Arrays.equals(correctOptions,selectedOptions);
     }
 }

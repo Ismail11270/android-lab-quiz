@@ -84,10 +84,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void restartQuiz(){
+        currentQuestion = 0;
         questions = new ArrayList<>();
         questionFragments = new ArrayList<>();
         fillQuestions();
-        showQuestion(0);
+        showQuestion(currentQuestion);
         Toast.makeText(this, "Quiz restarted!", Toast.LENGTH_SHORT).show();
     }
 
@@ -141,61 +142,65 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void fillQuestions() {
         Question question = new MultipleChoiceQuestion(
-                "Select one of 4 answer to question 1",
-                new String[] {"Option A",
-                        "Option B",
-                        "Option C",
-                        "Option D"},
-                2,3
+                "Which are the names of mobile operating systems?",
+                new String[] {"BreadOS",
+                        "IOS",
+                        "Android",
+                        "Linux"},
+                new boolean[]{
+                        false,true,true,false
+                }
         );
         questionFragments.add(MultipleChoiceQuestionFragment.newInstance(question));
         questions.add(question);
 
         question = new MultipleChoiceQuestion(
-                "Select one of 4 answer to question 2",
-                new String[] {"Option A",
-                        "Option B",
-                        "Option C",
-                        "Option D"},
-                0,3
+                "Which are the versions of Windows operation system?",
+                new String[] {"Windows  Me",
+                        "Windows 8.1",
+                        "Windows 98",
+                        "Windows 95"},
+                new boolean[]{
+                        true,true,true,true
+                }
         );
         questionFragments.add(MultipleChoiceQuestionFragment.newInstance(question));
         questions.add(question);
 
         question = new SingleChoiceQuestion(
-                "Select one of 4 answer to question 3",
-                1,
-                new String[] {"Option A",
-                "Option B",
-                "Option C",
-                "Option D"}
+                "Why was this quiz created?",
+                0,
+                new String[] {"University assignment",
+                "Author had a lot of free time",
+                "To get to know you better",
+                "Making quizzes is fun"}
         );
         questionFragments.add(SingleChoiceQuestionFragment.newInstance(question));
         questions.add(question);
 
         question = new SingleChoiceQuestion(
-                "Select one of 4 answer to question 4",
-                2,
-                new String[]{"Option AA",
-                "Option BB",
-                "Option CC",
-                "Option DD"}
+                "What is the most popular programming language for android development",
+                3,
+                new String[]{"C++",
+                "Python",
+                "PHP",
+                "Java"}
         );
         questions.add(question);
         questionFragments.add(SingleChoiceQuestionFragment.newInstance(question));
 
         question = new ToggleQuestion(
-                "Are you real?",
+                "Do you like coding?",
                 true
         );
         questions.add(question);
         questionFragments.add(ToggleQuestionFragment.newInstance(question));
 
         question = new SwitchQuestion(
-                "Are you real?",
-                "I am real",
-                "I am not real",
-                false
+                "Java vs Kotlin",
+                "Kotlin",
+                "Java",
+                true
         );
         questions.add(question);
         questionFragments.add(SwitchQuestionFragment.newInstance(question));

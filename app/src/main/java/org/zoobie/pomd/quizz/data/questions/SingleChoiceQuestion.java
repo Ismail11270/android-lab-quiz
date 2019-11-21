@@ -6,7 +6,7 @@ import android.os.Parcelable;
 public class SingleChoiceQuestion extends Question {
     private int correctOption;
     private String[] optionsText = new String[4];
-    private int selectedOption;
+    private int selectedOption = -1;
 
     public SingleChoiceQuestion(String questionBody, int correctOption, String[] optionsText) {
         super(questionBody, Type.SINGLE_OPTION);
