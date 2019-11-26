@@ -4,17 +4,15 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
 import org.zoobie.pomd.quizz.R;
-import org.zoobie.pomd.quizz.data.questions.Question;
-import org.zoobie.pomd.quizz.data.questions.SingleChoiceQuestion;
+import org.zoobie.pomd.quizz.data.model.question.Question;
+import org.zoobie.pomd.quizz.data.model.question.SingleChoiceQuestion;
 
 
 public class SingleChoiceQuestionFragment extends Fragment {

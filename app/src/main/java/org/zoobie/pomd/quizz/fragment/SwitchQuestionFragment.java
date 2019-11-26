@@ -12,8 +12,8 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import org.zoobie.pomd.quizz.R;
-import org.zoobie.pomd.quizz.data.questions.Question;
-import org.zoobie.pomd.quizz.data.questions.SwitchQuestion;
+import org.zoobie.pomd.quizz.data.model.question.Question;
+import org.zoobie.pomd.quizz.data.model.question.SwitchQuestion;
 
 public class SwitchQuestionFragment extends Fragment {
     private SwitchQuestion question;

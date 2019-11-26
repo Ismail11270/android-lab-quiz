@@ -1,9 +1,24 @@
-package org.zoobie.pomd.quizz.data.questions;
+package org.zoobie.pomd.quizz.data.model.question;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 public class SwitchQuestion extends Question {
+
+    public static final String TABLE_NAME = "SWquestion";
+    public static final String COLUMN_QUESTION_BODY = "question_body";
+    public static final String COLUMN_TEXT_ON = "text_on";
+    public static final String COLUMN_TEXT_OFF = "text_off";
+    public static final String COLUMN_CORRECT_ANSWER = "correct_answer";
+
+    public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME +
+            "(" +
+            "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+            COLUMN_QUESTION_BODY + " varchar(250)," +
+            COLUMN_TEXT_ON + " varchar(50)," +
+            COLUMN_TEXT_OFF + " varchar(50)," +
+            COLUMN_CORRECT_ANSWER + " INTEGER " +
+            ")";
 
     private final String onText, offText;
     private boolean switchOn = false;

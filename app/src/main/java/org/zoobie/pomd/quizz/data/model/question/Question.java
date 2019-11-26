@@ -1,9 +1,7 @@
-package org.zoobie.pomd.quizz.data.questions;
+package org.zoobie.pomd.quizz.data.model.question;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import java.io.Serializable;
 
 public abstract class Question implements Parcelable {
     String questionBody;
@@ -16,6 +14,7 @@ public abstract class Question implements Parcelable {
 
     protected Question() {
     }
+
 
     public abstract boolean isAnsweredCorrectly();
 

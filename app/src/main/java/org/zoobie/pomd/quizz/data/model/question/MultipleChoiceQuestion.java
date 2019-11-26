@@ -1,4 +1,4 @@
-package org.zoobie.pomd.quizz.data.questions;
+package org.zoobie.pomd.quizz.data.model.question;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -8,9 +8,24 @@ import java.util.Arrays;
 
 public class MultipleChoiceQuestion extends Question {
 
+    public static final String TABLE_NAME = "MCquestion";
+    public static final String COLUMN_QUESTION_BODY = "question_body";
+    public static final String COLUMN_CORRECT_OPTIONS = "correct_options";
+    public static final String COLUMN_SELECTED_OPTIONS = "selected_options";
+    public static final String COLUMN_OPTIONS_TEXT = "options_text";
+
+    public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME +
+            "(" +
+            "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+            COLUMN_QUESTION_BODY + " varchar(250)," +
+            COLUMN_OPTIONS_TEXT + " varchar(250)," +
+            COLUMN_CORRECT_OPTIONS + " varchar(50) " +
+            ")";
+
     private boolean[] correctOptions = new boolean[4];
 
     private boolean[] selectedOptions = {false, false, false, false};
+
 
     public String[] optionsText = new String[4];
 
@@ -49,6 +64,7 @@ public class MultipleChoiceQuestion extends Question {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(type.id);
+
         dest.writeString(questionBody);
         dest.writeBooleanArray(correctOptions);
         dest.writeBooleanArray(selectedOptions);

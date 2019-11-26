@@ -1,9 +1,24 @@
-package org.zoobie.pomd.quizz.data.questions;
+package org.zoobie.pomd.quizz.data.model.question;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 public class SingleChoiceQuestion extends Question {
+
+    public static final String TABLE_NAME = "SCquestion";
+    public static final String COLUMN_QUESTION_BODY = "question_body";
+    public static final String COLUMN_CORRECT_OPTION = "correct_option";
+    public static final String COLUMN_SELECTED_OPTION = "selected_option";
+    public static final String COLUMN_OPTIONS_TEXT = "options_text";
+
+    public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME +
+            "(" +
+            "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+            COLUMN_QUESTION_BODY + " varchar(250)," +
+            COLUMN_OPTIONS_TEXT + " varchar(250)," +
+            COLUMN_CORRECT_OPTION + " INTEGER" +
+            ")";
+
     private int correctOption;
     private String[] optionsText = new String[4];
     private int selectedOption = -1;

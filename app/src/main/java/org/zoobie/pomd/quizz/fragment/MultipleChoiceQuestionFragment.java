@@ -6,15 +6,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 
 import org.zoobie.pomd.quizz.R;
-import org.zoobie.pomd.quizz.data.questions.MultipleChoiceQuestion;
-import org.zoobie.pomd.quizz.data.questions.Question;
+import org.zoobie.pomd.quizz.data.model.question.MultipleChoiceQuestion;
+import org.zoobie.pomd.quizz.data.model.question.Question;
 
 public class MultipleChoiceQuestionFragment extends Fragment implements View.OnClickListener {
 

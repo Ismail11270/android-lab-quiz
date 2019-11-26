@@ -7,12 +7,11 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import org.zoobie.pomd.quizz.R;
-import org.zoobie.pomd.quizz.data.questions.Question;
-import org.zoobie.pomd.quizz.data.questions.ToggleQuestion;
+import org.zoobie.pomd.quizz.data.model.question.Question;
+import org.zoobie.pomd.quizz.data.model.question.ToggleQuestion;
 
 public class ToggleQuestionFragment extends Fragment implements View.OnClickListener {
     private ToggleQuestion question;
