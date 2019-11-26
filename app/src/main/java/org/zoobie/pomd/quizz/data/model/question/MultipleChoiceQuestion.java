@@ -35,6 +35,11 @@ public class MultipleChoiceQuestion extends Question {
         this.correctOptions = correctOptions;
     }
 
+    public MultipleChoiceQuestion(int id, String questionBody, String[] options, boolean[] correctOptions){
+        this(questionBody,options,correctOptions);
+        this.id = id;
+    }
+
     public MultipleChoiceQuestion(Parcel parcel){
         type = Type.MULTIPLE_OPTION;
         questionBody = parcel.readString();

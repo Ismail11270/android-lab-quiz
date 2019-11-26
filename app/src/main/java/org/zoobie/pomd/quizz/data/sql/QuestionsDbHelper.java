@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Switch;
 
 import androidx.annotation.Nullable;
@@ -54,37 +55,184 @@ public class QuestionsDbHelper extends SQLiteOpenHelper {
     public List<Integer> getAllIds(Question.Type type) {
         SQLiteDatabase qdb = this.getWritableDatabase();
         String SELECT = "SELECT id FROM ";
-        switch(type){
+        switch (type) {
             case MULTIPLE_OPTION:
-                SELECT+= MultipleChoiceQuestion.TABLE_NAME;
+                SELECT += MultipleChoiceQuestion.TABLE_NAME;
                 break;
             case SINGLE_OPTION:
-                SELECT+= SingleChoiceQuestion.TABLE_NAME;
+                SELECT += SingleChoiceQuestion.TABLE_NAME;
                 break;
             case SWITCH:
-                SELECT+= SwitchQuestion.TABLE_NAME;
+                SELECT += SwitchQuestion.TABLE_NAME;
                 break;
             case TOGGLE:
-                SELECT+= ToggleQuestion.TABLE_NAME;
+                SELECT += ToggleQuestion.TABLE_NAME;
                 break;
         }
-        Cursor cursor = qdb.rawQuery(SELECT,null);
+        Cursor cursor = qdb.rawQuery(SELECT, null);
         List<Integer> idList = new ArrayList<>();
-        if(cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             idList.add(cursor.getInt(cursor.getColumnIndex("id")));
-            while(cursor.moveToNext()){
+            while (cursor.moveToNext()) {
                 idList.add(cursor.getInt(cursor.getColumnIndex("id")));
             }
         }
         return idList;
     }
 
-    public Question getQuestionById(Question.Type type){
-        return null;
+    public Question getQuestionById(Question.Type type, int id) {
+        SQLiteDatabase qdb = this.getWritableDatabase();
+        Cursor c;
+        Question question = null;
+        switch (type) {
+            case MULTIPLE_OPTION:
+                c = qdb.query(
+                        MultipleChoiceQuestion.TABLE_NAME,
+                        new String[]{"id", MultipleChoiceQuestion.COLUMN_QUESTION_BODY, MultipleChoiceQuestion.COLUMN_OPTIONS_TEXT, MultipleChoiceQuestion.COLUMN_CORRECT_OPTIONS},
+                        "id=?",
+                        new String[]{id + ""},
+                        null, null, null, null);
+                if (c != null) {
+                    c.moveToFirst();
+                    question = new MultipleChoiceQuestion(
+                            c.getInt(c.getColumnIndex("id")),
+                            c.getString(c.getColumnIndex(MultipleChoiceQuestion.COLUMN_QUESTION_BODY)),
+                            deserialize(c.getString(c.getColumnIndex(MultipleChoiceQuestion.COLUMN_OPTIONS_TEXT))),
+                            deserializeBoolean(c.getString(c.getColumnIndex(MultipleChoiceQuestion.COLUMN_CORRECT_OPTIONS))));
+                    c.close();
+                }
+                break;
+
+            case SINGLE_OPTION:
+                c = qdb.query(
+                        SingleChoiceQuestion.TABLE_NAME,
+                        new String[]{"id", SingleChoiceQuestion.COLUMN_QUESTION_BODY, SingleChoiceQuestion.COLUMN_OPTIONS_TEXT, SingleChoiceQuestion.COLUMN_CORRECT_OPTION},
+                        "id=?",
+                        new String[]{id + ""},
+                        null, null, null, null);
+                if (c != null) {
+                    c.moveToFirst();
+                    question = new SingleChoiceQuestion(
+                            c.getInt(c.getColumnIndex("id")),
+                            c.getString(c.getColumnIndex(SingleChoiceQuestion.COLUMN_QUESTION_BODY)),
+                            deserialize(c.getString(c.getColumnIndex(SingleChoiceQuestion.COLUMN_OPTIONS_TEXT))),
+                            c.getInt(c.getColumnIndex(SingleChoiceQuestion.COLUMN_CORRECT_OPTION)));
+                    c.close();
+                }
+                break;
+            case SWITCH:
+                c = qdb.query(
+                        SwitchQuestion.TABLE_NAME,
+                        new String[]{"id", SwitchQuestion.COLUMN_QUESTION_BODY, SwitchQuestion.COLUMN_TEXT_ON, SwitchQuestion.COLUMN_TEXT_ON, SwitchQuestion.COLUMN_CORRECT_ANSWER},
+                        "id=?",
+                        new String[]{id + ""},
+                        null, null, null, null);
+                if (c != null) {
+                    c.moveToFirst();
+                    question = new SwitchQuestion(
+                            c.getInt(c.getColumnIndex("id")),
+                            c.getString(c.getColumnIndex(SwitchQuestion.COLUMN_QUESTION_BODY)),
+                            c.getString(c.getColumnIndex(SwitchQuestion.COLUMN_TEXT_ON)),
+                            c.getString(c.getColumnIndex(SwitchQuestion.COLUMN_TEXT_OFF)),
+                            c.getInt(c.getColumnIndex(SwitchQuestion.COLUMN_CORRECT_ANSWER)));
+                }
+                break;
+            case TOGGLE:
+                c = qdb.query(
+                        ToggleQuestion.TABLE_NAME,
+                        new String[]{"id", ToggleQuestion.COLUMN_QUESTION_BODY, ToggleQuestion.COLUMN_CORRECT_ANSWER},
+                        "id=?",
+                        new String[]{id + ""},
+                        null, null, null, null);
+                if (c != null) {
+                    c.moveToFirst();
+                    question = new ToggleQuestion(
+                            c.getInt(c.getColumnIndex("id")),
+                            c.getString(c.getColumnIndex(ToggleQuestion.COLUMN_QUESTION_BODY)),
+                            c.getInt(c.getColumnIndex(ToggleQuestion.COLUMN_CORRECT_ANSWER)));
+                }
+                break;
+        }
+        return question;
     }
 
-    public Question getRandomQuestion(Question.Type type){
-        return null;
+    public List<Question> getAllQuestions(Question.Type type) {
+        SQLiteDatabase qdb = this.getWritableDatabase();
+        List<Question> questions = new ArrayList<>();
+        Cursor c;
+
+        switch (type) {
+            case MULTIPLE_OPTION: {
+                c = qdb.rawQuery("SELECT * FROM " + MultipleChoiceQuestion.TABLE_NAME, null);
+                if (c.moveToFirst()) {
+                    do {
+                        Question question = new MultipleChoiceQuestion(
+                                c.getInt(c.getColumnIndex("id")),
+                                c.getString(c.getColumnIndex(MultipleChoiceQuestion.COLUMN_QUESTION_BODY)),
+                                deserialize(c.getString(c.getColumnIndex(MultipleChoiceQuestion.COLUMN_OPTIONS_TEXT))),
+                                deserializeBoolean(c.getString(c.getColumnIndex(MultipleChoiceQuestion.COLUMN_CORRECT_OPTIONS))));
+                        questions.add(question);
+                    } while (c.moveToNext());
+                    c.close();
+                }
+                break;
+            }
+            case SINGLE_OPTION:
+                c = qdb.rawQuery("SELECT * FROM " + SingleChoiceQuestion.TABLE_NAME, null);
+                if (c.moveToFirst()) {
+                    do {
+                        Question question = new SingleChoiceQuestion(
+                                c.getInt(c.getColumnIndex("id")),
+                                c.getString(c.getColumnIndex(SingleChoiceQuestion.COLUMN_QUESTION_BODY)),
+                                deserialize(c.getString(c.getColumnIndex(SingleChoiceQuestion.COLUMN_OPTIONS_TEXT))),
+                                c.getInt(c.getColumnIndex(SingleChoiceQuestion.COLUMN_CORRECT_OPTION)));
+                        questions.add(question);
+                    } while (c.moveToNext());
+                    c.close();
+                }
+                break;
+            case SWITCH:
+                c = qdb.rawQuery("SELECT * FROM " + SwitchQuestion.TABLE_NAME, null);
+                if (c.moveToFirst()) {
+                    do {
+                        Log.i("swetch", "1");
+                        Question question = new SwitchQuestion(
+                                c.getInt(c.getColumnIndex("id")),
+                                c.getString(c.getColumnIndex(SwitchQuestion.COLUMN_QUESTION_BODY)),
+                                c.getString(c.getColumnIndex(SwitchQuestion.COLUMN_TEXT_ON)),
+                                c.getString(c.getColumnIndex(SwitchQuestion.COLUMN_TEXT_OFF)),
+                                c.getInt(c.getColumnIndex(SwitchQuestion.COLUMN_CORRECT_ANSWER)));
+                        questions.add(question);
+                        Log.i("swetch", question.getQuestionBody());
+                    } while (c.moveToNext());
+                }
+                break;
+            case TOGGLE:
+                c = qdb.rawQuery("SELECT * FROM " + ToggleQuestion.TABLE_NAME, null);
+                if (c.moveToFirst()) {
+                    do {
+                        Log.i("swetch", "1");
+                        Question question = new ToggleQuestion(
+                                c.getInt(c.getColumnIndex("id")),
+                                c.getString(c.getColumnIndex(ToggleQuestion.COLUMN_QUESTION_BODY)),
+                                c.getInt(c.getColumnIndex(ToggleQuestion.COLUMN_CORRECT_ANSWER)));
+                        questions.add(question);
+                        Log.i("swetch", question.getQuestionBody());
+                    } while (c.moveToNext());
+                }
+                break;
+        }
+        return questions;
+
+    }
+
+    public List<Question> getAllQuestions() {
+        List<Question> questions = new ArrayList<>();
+        questions.addAll(getAllQuestions(Question.Type.MULTIPLE_OPTION));
+        questions.addAll(getAllQuestions(Question.Type.SINGLE_OPTION));
+        questions.addAll(getAllQuestions(Question.Type.SWITCH));
+        questions.addAll(getAllQuestions(Question.Type.TOGGLE));
+        return questions;
     }
 
     public long addQuestion(Question question) {
@@ -112,18 +260,18 @@ public class QuestionsDbHelper extends SQLiteOpenHelper {
                 values.put(SwitchQuestion.COLUMN_QUESTION_BODY,
                         question.getQuestionBody());
                 values.put(SwitchQuestion.COLUMN_TEXT_ON,
-                        ((SwitchQuestion)question).getOnText());
+                        ((SwitchQuestion) question).getOnText());
                 values.put(SwitchQuestion.COLUMN_TEXT_OFF,
-                        ((SwitchQuestion)question).getOffText());
+                        ((SwitchQuestion) question).getOffText());
                 values.put(SwitchQuestion.COLUMN_CORRECT_ANSWER,
-                        ((SwitchQuestion)question).getCorrectAnswer());
-                return 1;
+                        ((SwitchQuestion) question).getCorrectAnswer() ? 1 : 0);
+                return qdb.insert(SwitchQuestion.TABLE_NAME, null, values);
             case TOGGLE:
                 values.put(ToggleQuestion.COLUMN_QUESTION_BODY,
                         question.getQuestionBody());
                 values.put(ToggleQuestion.COLUMN_CORRECT_ANSWER,
-                        ((ToggleQuestion)question).getCorrectAnswer());
-                return 1;
+                        ((ToggleQuestion) question).getCorrectAnswer() ? 1 : 0);
+                return qdb.insert(ToggleQuestion.TABLE_NAME, null, values);
             default:
                 return -1;
         }

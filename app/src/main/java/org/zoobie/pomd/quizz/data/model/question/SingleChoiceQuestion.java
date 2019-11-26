@@ -29,6 +29,11 @@ public class SingleChoiceQuestion extends Question {
         this.optionsText = optionsText;
     }
 
+    public SingleChoiceQuestion(int id, String questionBody, String[] optionsText, int correctOption){
+        this(questionBody,correctOption,optionsText);
+        this.id = id;
+    }
+
     public SingleChoiceQuestion(Parcel parcel){
 //        type = Type.getTypeById(parcel.readInt());
         type = Type.SINGLE_OPTION;

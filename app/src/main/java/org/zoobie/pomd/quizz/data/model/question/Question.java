@@ -7,6 +7,8 @@ public abstract class Question implements Parcelable {
     String questionBody;
     Type type;
 
+    int id;
+
     Question(String questionBody, Type type) {
         this.questionBody = questionBody;
         this.type = type;
@@ -75,5 +77,11 @@ public abstract class Question implements Parcelable {
         }
     };
 
+    public int getId() {
+        return id;
+    }
 
+    public void setId(int id) {
+        this.id = id;
+    }
 }

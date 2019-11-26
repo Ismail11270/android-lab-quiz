@@ -27,8 +27,9 @@ import org.zoobie.pomd.quizz.data.model.question.ToggleQuestion;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class QuizActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final int RESULTS_ACTIVITY_CODE = 101;
     public static final int RESULT_RESTART = 201;
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView questionsNumberTv, questionBodyTv;
     private Button nextQuestionButton, prevQuestionButton, submitButton, restartButton;
 
-    private final int NUMBER_OF_QUESTIONS = 6;
+    private int numberOfQuestions = 6;
 
     private FragmentManager fragmentManager;
 
@@ -63,13 +64,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         questionsDbHelper = new QuestionsDbHelper(this);
 
-//        fillQuestions();
+        getQuestions();
 
         System.out.println(Arrays.toString(questionsDbHelper.getAllIds(Question.Type.SINGLE_OPTION).toArray()));
         showQuestion(currentQuestion);
 
         nextQuestionButton.setOnClickListener(v -> {
-            if(currentQuestion < NUMBER_OF_QUESTIONS-1) {
+            if(currentQuestion < numberOfQuestions -1) {
                 currentQuestion++;
                 showQuestion(currentQuestion);
             }
@@ -91,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         currentQuestion = 0;
         questions = new ArrayList<>();
         questionFragments = new ArrayList<>();
-        fillQuestions();
+        getQuestions();
         showQuestion(currentQuestion);
         Toast.makeText(this, "Quiz restarted!", Toast.LENGTH_SHORT).show();
     }
@@ -99,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void showQuestion(int i) {
         Question.Type type = questions.get(i).getType();
         int a = i+1;
-        questionsNumberTv.setText("Question\n" + a + "/" + NUMBER_OF_QUESTIONS);
+        questionsNumberTv.setText("Question\n" + a + "/" + numberOfQuestions);
         if (type == Question.Type.SINGLE_OPTION) {
             showSingleChoiceQuestion(i);
         } else if (type == Question.Type.MULTIPLE_OPTION) {
@@ -144,83 +145,41 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    private void fillQuestions() {
-        Question question = new MultipleChoiceQuestion(
-                "Which are the names of mobile operating systems?",
-                new String[] {"BreadOS",
-                        "IOS",
-                        "Android",
-                        "Linux"},
-                new boolean[]{
-                        false,true,true,false
-                }
-        );
-        questionFragments.add(MultipleChoiceQuestionFragment.newInstance(question));
-        questions.add(question);
-        questionsDbHelper.addQuestion(question);
+    private void getQuestions() {
+        List<Question> multipleChoiceQuestions = new ArrayList<>();
+        multipleChoiceQuestions.addAll((questionsDbHelper.getAllQuestions(Question.Type.MULTIPLE_OPTION)));
+        List<Question> singleChoiceQuestions = new ArrayList<>();
+        singleChoiceQuestions.addAll((questionsDbHelper.getAllQuestions(Question.Type.SINGLE_OPTION)));
+        List<Question> switchQuestions = new ArrayList<>();
+        switchQuestions.addAll((questionsDbHelper.getAllQuestions(Question.Type.SWITCH)));
+        List<Question> toggleQuestions = new ArrayList<>();
+        toggleQuestions.addAll((questionsDbHelper.getAllQuestions(Question.Type.TOGGLE)));
 
-        question = new MultipleChoiceQuestion(
-                "Which are the versions of Windows operation system?",
-                new String[] {"Windows  Me",
-                        "Windows 8.1",
-                        "Windows 98",
-                        "Windows 95"},
-                new boolean[]{
-                        true,true,true,true
-                }
-        );
-        questionFragments.add(MultipleChoiceQuestionFragment.newInstance(question));
-        questions.add(question);
-        questionsDbHelper.addQuestion(question);
-
-        question = new SingleChoiceQuestion(
-                "Why was this quiz created?",
-                0,
-                new String[] {"University assignment",
-                "Author had a lot of free time",
-                "To get to know you better",
-                "Making quizzes is fun"}
-        );
-        questionFragments.add(SingleChoiceQuestionFragment.newInstance(question));
-        questions.add(question);
-        questionsDbHelper.addQuestion(question);
-
-        question = new SingleChoiceQuestion(
-                "What is the most popular programming language for android development",
-                3,
-                new String[]{"C++",
-                "Python",
-                "PHP",
-                "Java"}
-        );
-        questions.add(question);
-        questionFragments.add(SingleChoiceQuestionFragment.newInstance(question));
-        questionsDbHelper.addQuestion(question);
-
-        question = new ToggleQuestion(
-                "Do you like coding?",
-                true
-        );
-        questions.add(question);
-        questionFragments.add(ToggleQuestionFragment.newInstance(question));
-        questionsDbHelper.addQuestion(question);
-
-        question = new SwitchQuestion(
-                "Java vs Kotlin",
-                "Kotlin",
-                "Java",
-                true
-        );
-        questions.add(question);
-        questionFragments.add(SwitchQuestionFragment.newInstance(question));
-        questionsDbHelper.addQuestion(question);
-
+        Log.i("SWITCH",questionsDbHelper.getAllIds(Question.Type.SWITCH).size() + "");
+        Log.i("TOGGLE",questionsDbHelper.getAllIds(Question.Type.TOGGLE).size() + "");
+        questions.addAll(multipleChoiceQuestions);
+        questions.addAll(singleChoiceQuestions);
+        questions.addAll(switchQuestions);
+        questions.addAll(toggleQuestions);
+        for (Question q : multipleChoiceQuestions) {
+            questionFragments.add(MultipleChoiceQuestionFragment.newInstance(q));
+        }
+        for (Question q : singleChoiceQuestions) {
+            questionFragments.add(SingleChoiceQuestionFragment.newInstance(q));
+        }
+        for (Question q : switchQuestions) {
+            questionFragments.add(SwitchQuestionFragment.newInstance(q));
+        }
+        for (Question q : toggleQuestions) {
+            questionFragments.add(ToggleQuestionFragment.newInstance(q));
+        }
+        numberOfQuestions = questions.size();
 
     }
 
     private void findViews() {
         questionsNumberTv = findViewById(R.id.numberOfTasks);
-        questionsNumberTv.setText("Question\n1/" + NUMBER_OF_QUESTIONS);
+        questionsNumberTv.setText("Question\n1/" + numberOfQuestions);
 
         questionBodyTv = findViewById(R.id.questionBody);
         nextQuestionButton = findViewById(R.id.nextButton);

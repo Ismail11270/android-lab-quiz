@@ -23,6 +23,11 @@ public class ToggleQuestion extends Question {
         super(questionBody,Type.TOGGLE);
         correctAnswer = b;
     }
+    public ToggleQuestion(int id,String questionBody, int b){
+        this(questionBody,false);
+        if(b == 1) this.correctAnswer = true;
+        this.id = id;
+    }
 
     public ToggleQuestion(Parcel parcel){
 //        type = Type.getTypeById(parcel.readInt());

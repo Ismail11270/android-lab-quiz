@@ -55,12 +55,12 @@ public class ResultActivity extends AppCompatActivity {
 
         //buttons
         exitButton.setOnClickListener(v -> {
-            setResult(MainActivity.RESULT_EXIT);
+            setResult(QuizActivity.RESULT_EXIT);
             finish();
         });
 
         restartButton.setOnClickListener(v -> {
-            setResult(MainActivity.RESULT_RESTART);
+            setResult(QuizActivity.RESULT_RESTART);
             finish();
         });
 

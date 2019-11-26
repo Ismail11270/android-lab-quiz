@@ -31,6 +31,11 @@ public class SwitchQuestion extends Question {
         this.correctAnswer = correctAnswer;
     }
 
+    public SwitchQuestion(int id, String questionBody, String onText, String offText, int correctAnswer){
+        this(questionBody,onText,offText,false);
+        if(correctAnswer==1) this.correctAnswer = true;
+        this.id = id;
+    }
     public SwitchQuestion(Parcel parcel){
 //        type = Type.getTypeById(parcel.readInt());
         type = Type.SWITCH;
@@ -54,7 +59,9 @@ public class SwitchQuestion extends Question {
     public boolean getCorrectAnswer(){
         return correctAnswer;
     }
-
+    public int getCorrectIntAnswer(){
+        return correctAnswer ? 1 : 0;
+    }
     public void setSwitchOn(boolean switchOn){
         this.switchOn = switchOn;
     }
