@@ -27,6 +27,7 @@ import org.zoobie.pomd.quizz.data.model.question.ToggleQuestion;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class QuizActivity extends AppCompatActivity implements View.OnClickListener {
@@ -37,7 +38,7 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
     private TextView questionsNumberTv, questionBodyTv;
     private Button nextQuestionButton, prevQuestionButton, submitButton, restartButton;
 
-    private int numberOfQuestions = 6;
+    private int numberOfQuestions = 0;
 
     private FragmentManager fragmentManager;
 
@@ -65,7 +66,6 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
         questionsDbHelper = new QuestionsDbHelper(this);
 
         getQuestions();
-
         System.out.println(Arrays.toString(questionsDbHelper.getAllIds(Question.Type.SINGLE_OPTION).toArray()));
         showQuestion(currentQuestion);
 
@@ -155,24 +155,27 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
         List<Question> toggleQuestions = new ArrayList<>();
         toggleQuestions.addAll((questionsDbHelper.getAllQuestions(Question.Type.TOGGLE)));
 
-        Log.i("SWITCH",questionsDbHelper.getAllIds(Question.Type.SWITCH).size() + "");
-        Log.i("TOGGLE",questionsDbHelper.getAllIds(Question.Type.TOGGLE).size() + "");
+
         questions.addAll(multipleChoiceQuestions);
         questions.addAll(singleChoiceQuestions);
         questions.addAll(switchQuestions);
         questions.addAll(toggleQuestions);
-        for (Question q : multipleChoiceQuestions) {
-            questionFragments.add(MultipleChoiceQuestionFragment.newInstance(q));
+        Collections.shuffle(questions);
+        for(Question q : questions){
+            if(q.getType() == Question.Type.MULTIPLE_OPTION){
+                questionFragments.add(MultipleChoiceQuestionFragment.newInstance(q));
+            }
+            else if(q.getType() == Question.Type.SINGLE_OPTION){
+                questionFragments.add(SingleChoiceQuestionFragment.newInstance(q));
+            }
+            else if(q.getType() == Question.Type.SWITCH){
+                questionFragments.add(SwitchQuestionFragment.newInstance(q));
+            }
+            else if(q.getType() == Question.Type.TOGGLE){
+                questionFragments.add(ToggleQuestionFragment.newInstance(q));
+            }
         }
-        for (Question q : singleChoiceQuestions) {
-            questionFragments.add(SingleChoiceQuestionFragment.newInstance(q));
-        }
-        for (Question q : switchQuestions) {
-            questionFragments.add(SwitchQuestionFragment.newInstance(q));
-        }
-        for (Question q : toggleQuestions) {
-            questionFragments.add(ToggleQuestionFragment.newInstance(q));
-        }
+
         numberOfQuestions = questions.size();
 
     }

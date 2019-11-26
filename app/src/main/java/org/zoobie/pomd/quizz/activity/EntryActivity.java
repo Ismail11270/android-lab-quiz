@@ -88,12 +88,27 @@ public class EntryActivity extends AppCompatActivity {
                         "Java"}
         );
         questionsDbHelper.addQuestion(question);
+        question = new SingleChoiceQuestion(
+                "What does SUT stand for?",
+                1,
+                new String[]{"System Under Test",
+                        "Silesian University of Techology",
+                        "Simply United Together",
+                        "Service Unit Teams"}
+        );
+        questionsDbHelper.addQuestion(question);
 
         question = new ToggleQuestion(
                 "Do you like coding?",
                 true
         );
-        Log.i(TAG, questionsDbHelper.addQuestion(question) + "");
+        questionsDbHelper.addQuestion(question);
+
+        question = new ToggleQuestion(
+                "Is winter cold?",
+                true
+        );
+        questionsDbHelper.addQuestion(question);
 
         question = new SwitchQuestion(
                 "Java vs Kotlin",
@@ -101,7 +116,7 @@ public class EntryActivity extends AppCompatActivity {
                 "Java",
                 true
         );
-        Log.i(TAG, questionsDbHelper.addQuestion(question) + "");
+        questionsDbHelper.addQuestion(question);
     }
 
 
